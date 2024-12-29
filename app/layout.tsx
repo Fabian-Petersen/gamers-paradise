@@ -3,6 +3,7 @@ import "./globals.css";
 import RootLayout from "./rootLayout";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Header from "./components/Header";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 
 export const metadata: Metadata = {
   title: "Gamers Paradise",
@@ -17,8 +18,9 @@ export default function MainLayout({
   return (
     <RootLayout>
       <Header />
-      <div className="grid grid-cols-[auto_1fr] mx-auto min-h-screen mt-[var(--navbarHeight)]">
+      <div className="grid grid-cols-[auto_1fr] mx-auto min-h-screen mt-[var(--navbarHeight)] dark:bg-gray-900">
         <Sidebar />
+        <ScrollToTopButton />
         {children}
       </div>
     </RootLayout>

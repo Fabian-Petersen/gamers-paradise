@@ -5,7 +5,8 @@
 @tailwind utilities;
 
 :root {
-  --navbarHeight: 5rem;
+  --navbarHeight: 4rem;
+  --pageTopPadding: 2rem;
 }
 
 html {

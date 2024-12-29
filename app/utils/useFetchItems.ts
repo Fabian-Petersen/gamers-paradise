@@ -15,12 +15,12 @@ export type Game = {
   rating_top: number;
   ratings: Rating[];
   stores: stores[];
-  platforms: platform[];
+  platforms: platforms[];
   short_screenshots: screenShots[];
   tags: tags[];
 };
 
-type platform = {
+type platforms = {
   platform: {
     id: number;
     name: string;
@@ -77,7 +77,7 @@ type FetchGamesParams = {
   endDate?: Date;
   ordering?: string;
   dates?: boolean;
-  platform?: string;
+  page_size?: number;
 };
 
 const NEXT_PUBLIC_API_KEY_RAWG = process.env.NEXT_PUBLIC_API_KEY as string;
@@ -85,26 +85,37 @@ const URL = process.env.NEXT_PUBLIC_BASE_URL as string;
 
 export function useFetchGames({
   page = 1,
-  path = "games",
   genre,
   platforms,
   store,
   dates,
   startDate,
-  platform,
   endDate,
   ordering,
+  page_size = 40,
 }: FetchGamesParams) {
   const { data, isPending, isError, error } = useQuery<GamesResponse>({
-    queryKey: [path, page, genre, platforms, store, dates, ordering, platform],
+    queryKey: [page, genre, platforms, store, dates, ordering, page_size],
     queryFn: async () => {
-      let url = `${URL}/${path}?key=${NEXT_PUBLIC_API_KEY_RAWG}${
-        page ? `&page=${page}` : ""
-      }`;
+      // let url = `${URL}/${path}?key=${NEXT_PUBLIC_API_KEY_RAWG}${
+      //   page ? `&page=${page}` : ""
+      // }`;
+
+      let url = `${URL}/games?key=${NEXT_PUBLIC_API_KEY_RAWG}${
+        page
+          ? `&page=${page}`
+          : platforms
+          ? `&platforms=${platforms}`
+          : store
+          ? `&stores=${store}`
+          : genre
+          ? `&genre=${genre}`
+          : ""
+      }&page_size=${page_size}`;
 
       // Add Query Params if they exist
-      if (genre) url += `&genres=${genre}`;
-      if (platform) url += `&platforms=${platform}`;
+      if (genre) url += `&genre=${genre}`;
+      if (platforms) url += `&platforms=${platforms}`;
       if (store) url += `&stores=${store}`;
       if (dates) url += `&dates=${startDate},${endDate}`;
       if (endDate) url += `&dates=${startDate},${endDate}`;
@@ -113,6 +124,7 @@ export function useFetchGames({
 
       const { data } = await axios.get(url);
       // console.log(url);
+      console.log("url:", url);
       return data;
     },
   });

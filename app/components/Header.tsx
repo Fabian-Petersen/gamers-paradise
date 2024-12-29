@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Search from "./Search";
+import SearchForm from "./SearchForm";
 import { MenuSquare, LucideMenu, MenuIcon } from "lucide-react";
 // import { Theme } from "react-daisyui";
 import ThemeToggleButton from "./ThemeToggleButton";
@@ -12,13 +12,11 @@ const Header = ({ className }: HeaderProps) => {
   return (
     <header
       id="navbar"
-      className={`${className} fixed top-0 dark:bg-gray-800 text-gray-70 bg-gray-300 z-[1000] h-[var(--navbar-height)] w-full`}
+      className={`${className} fixed top-0 dark:bg-gray-700 text-gray-70 bg-gray-300 z-[1000] h-[var(--navbarHeight)] w-full`}
     >
-      <nav className="w-full h-full py-2 px-4">
-        <div className="flex justify-center items-center gap-4">
-          <Search />
-          <ThemeToggleButton />
-        </div>
+      <nav className="w-full h-full py-2 px-4 flex justify-end items-center gap-4">
+        <SearchForm />
+        <ThemeToggleButton />
       </nav>
     </header>
   );

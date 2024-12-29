@@ -1,112 +1,102 @@
-const Pagination = () => {
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+};
+
+const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) => {
+  const updatePage = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    onPageChange(newPage);
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+
+    // First 5 pages
+    for (let i = 1; i <= Math.min(5, totalPages); i++) {
+      pages.push(
+        <button
+          key={`page-${i}`}
+          onClick={() => updatePage(i)}
+          className={`px-4 py-2 rounded-full text-clampBodyText border ${
+            i === currentPage
+              ? "bg-blue-500 text-white"
+              : "hover:bg-gray-100 dark:hover:bg-gray-700"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    // Current page if it's greater than 5
+    if (currentPage > 5) {
+      pages.push(
+        <button
+          key={`page-${currentPage}`}
+          onClick={() => updatePage(currentPage)}
+          className="px-4 py-2 rounded-full border bg-blue-500 text-white"
+        >
+          {currentPage}
+        </button>
+      );
+    }
+
+    // Ellipsis and last page if there are more pages
+    if (totalPages > 5) {
+      pages.push(
+        <span key="ellipsis" className="px-4 py-2">
+          ...
+        </span>,
+        <button
+          key={`page-${totalPages}`}
+          onClick={() => updatePage(totalPages)}
+          className={`px-4 py-2 rounded-full border text-clampBodyText ${
+            totalPages === currentPage
+              ? "bg-blue-500 text-white"
+              : "hover:bg-gray-100 dark:hover:bg-gray-700"
+          }`}
+        >
+          Last Page
+        </button>
+      );
+    }
+
+    return pages;
+  };
+
+  if (totalPages <= 1) return null;
+
   return (
-    <section className="flex items-center h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="w-full max-w-screen-xl px-4 mx-auto lg:px-12">
-        {/* // $ ----------------------------------------- Start coding here ------------------------------------- */}
-        <div className="relative overflow-hidden bg-white rounded-b-lg shadow-md dark:bg-gray-800">
-          <nav
-            className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0"
-            aria-label="Table navigation"
-          >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-              Showing{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1-10
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex items-stretch -space-x-px">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="z-10 flex items-center justify-center px-3 py-2 text-sm leading-tight border text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </section>
+    <div className="flex items-center justify-center gap-2 my-8 dark:hover:bg">
+      <button
+        onClick={() => updatePage(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="p-2 rounded-full border enabled:hover:bg-gray-100 dark:enabled:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Previous page"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+
+      {renderPageNumbers()}
+
+      <button
+        onClick={() => updatePage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="p-2 rounded-full border enabled:hover:bg-gray-100 dark:enabled:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Next page"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+    </div>
   );
 };
 

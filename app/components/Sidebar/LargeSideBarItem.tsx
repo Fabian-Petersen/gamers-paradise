@@ -7,31 +7,26 @@ import { useSearchParams } from "next/navigation";
 type LargeSidebarItemProps = {
   title: string;
   url?: string;
-  type?: "genre" | "platform" | "stores" | "dates" | "ordering";
-  path?: "games" | "platforms";
+  type?: "genre" | "platforms" | "stores" | "dates" | "ordering";
   isActive?: boolean;
 };
 
 function LargeSidebarItem({
   title,
   type,
-  path,
   isActive: defaultIsActive = false,
 }: LargeSidebarItemProps) {
   const searchParams = useSearchParams();
   const currentPath = searchParams.get("path");
 
   // Check if this item is currently active
-  const isActive = defaultIsActive || (path && currentPath === path);
+  const isActive = defaultIsActive && currentPath === type;
 
   // Create the URL with the appropriate query parameters
   const createUrl = () => {
-    if (path) {
-      return `/?path=${path}`;
-    }
     if (type) {
       const currentPath = searchParams.get("path") || "games";
-      return `/?path=${currentPath}&${type}=${title.toLowerCase()}`;
+      return `/?${currentPath}&${type}=${title.toLowerCase()}`;
     }
     return "/";
   };
@@ -41,8 +36,8 @@ function LargeSidebarItem({
       href={createUrl()}
       className={twMerge(
         buttonStyles({ variant: "ghost" }),
-        "w-full pl-11 rounded-lg tracking-wider text-clampBodyText dark:text-white",
-        isActive ? "font-bold bg-gray-200 hover:bg-gray-300" : ""
+        "w-full pl-11 rounded-lg tracking-wider text-clampBodyText dark:text-white dark:hover:bg-gray-500",
+        isActive ? "font-bold bg-gray-200 hover:bg-gray-300 text-white" : ""
       )}
     >
       <div className="whitespace-nowrap overflow-hidden text-ellipsis">

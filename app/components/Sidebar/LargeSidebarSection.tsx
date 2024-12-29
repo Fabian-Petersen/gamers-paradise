@@ -45,7 +45,7 @@ function LargeSidebarSection({
       {showExpandButton && (
         <Button
           variant="ghost"
-          className="w-full flex gap-1 p-2 text-gray-900 items-center text-clampBodyText rounded-lg dark:text-white"
+          className="w-full flex gap-1 p-2 text-gray-900 items-center text-clampBodyText rounded-lg dark:text-white dark:hover:bg-gray-500"
           onClick={() => setIsExpanded((e) => !e)}
         >
           <ButtonIcon className="size-6" />

@@ -15,6 +15,9 @@ const LargeSideBar = () => {
   const platforms = games?.results.flatMap((game) =>
     game.platforms.map((platform) => platform.platform)
   );
+  const platformIds = games?.results.flatMap((game) =>
+    game.platforms.map((platform) => platform.platform.id)
+  );
 
   //Genres for the Sidebar.
   const uniqueGenres = [...new Set(genres.map((item) => item.name))];
@@ -25,12 +28,12 @@ const LargeSideBar = () => {
 
   return (
     <aside
-      className={`lg:sticky absolute overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 pl-2 pr-6 border-r-2 ${
+      className={`lg:sticky absolute overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 pl-2 pr-6 border-r-[0.5px] border-r-gray-200 border-opacity-80 dark:bg-gray-900 pt-[var(--pageTopPadding)] ${
         isLargeOpen ? "lg:flex" : "lg:hidden"
       } ${isSmallOpen ? "flex z-[999] bg-white max-h-screen" : "hidden"}`}
     >
       <LargeSidebarSection title="Games" Icon={Home}>
-        <LargeSidebarItem title="All Games" path="games" />
+        <LargeSidebarItem title="All Games" />
       </LargeSidebarSection>
       <hr />
       <LargeSidebarSection visibleItemCount={2} title="Genres" Icon={Library}>
@@ -55,7 +58,7 @@ const LargeSideBar = () => {
         Icon={Gamepad2}
       >
         {uniquePlatformsName.map((platform, index) => (
-          <LargeSidebarItem key={index} title={platform} type="platform" />
+          <LargeSidebarItem key={index} title={platform} type="platforms" />
         ))}
       </LargeSidebarSection>
     </aside>

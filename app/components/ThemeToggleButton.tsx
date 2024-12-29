@@ -37,10 +37,10 @@ const ThemeToggleButton = () => {
   };
 
   return (
-    <div className="mr-[1.5rem] size-4 md:size-5 lg:size-6 flex items-center justify-center rounded-full outline-2 outline-white hover:cursor-pointer bg-white dark:bg-gray-700 p-4">
+    <div className="mr-[1.5rem] size-4 md:size-5 lg:size-6 flex items-center justify-center rounded-full outline-2 outline-white hover:cursor-pointer bg-white dark:bg-gray-900 p-5">
       {toggleTheme ? (
         <Tooltip content="Light Theme" placement="bottom">
-          <Sun size={24} onClick={handleClick} className="text-white" />
+          <Moon size={24} onClick={handleClick} className="dark:text-white" />
         </Tooltip>
       ) : (
         <Tooltip
@@ -48,7 +48,7 @@ const ThemeToggleButton = () => {
           placement="bottom"
           className="bg-gray-900"
         >
-          <Moon size={24} onClick={handleClick} className="text-gray-700" />
+          <Sun size={24} onClick={handleClick} className="dark:text-white" />
         </Tooltip>
       )}
     </div>

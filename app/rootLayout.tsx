@@ -14,7 +14,7 @@ export default function RootLayout({ children }: Props) {
   const queryClient = new QueryClient();
   return (
     <html lang="en" className="light">
-      <body className="">
+      <body className="dark:bg-gray-900 dark:text-white">
         <QueryClientProvider client={queryClient}>
           <AppContextProvider>
             <SidebarProvider>{children}</SidebarProvider>

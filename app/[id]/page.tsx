@@ -168,7 +168,7 @@ const Page = () => {
                 // Destructure the genre object
                 <li
                   key={genre.id}
-                  className="bg-categories text-white rounded-md py-1 px-4"
+                  className="bg-categories text-white text-clampBodyText rounded-md py-1 px-4"
                 >
                   {genre.name}
                 </li>
@@ -182,7 +182,7 @@ const Page = () => {
             <ul className="flex flex-wrap gap-4">
               {game.platforms.map((platform) => (
                 <li
-                  className="bg-availableOn rounded-md py-1 px-3 text-white"
+                  className="bg-availableOn rounded-md py-1 px-3 text-white text-clampBodyText"
                   key={platform.platform.id}
                 >
                   {platform.platform.name}
@@ -192,7 +192,7 @@ const Page = () => {
           </div>
         </section>
       ) : (
-        <div className="w-full border border-red-500 text-clampH3 absolute grid place-content-center h-full">
+        <div className="w-full text-clampH3 absolute grid place-content-center h-full">
           Game not found...
         </div>
       )}
