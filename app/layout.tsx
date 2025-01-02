@@ -18,7 +18,7 @@ export default function MainLayout({
   return (
     <RootLayout>
       <Header />
-      <div className="grid grid-cols-[auto_1fr] mx-auto min-h-screen mt-[var(--navbarHeight)] dark:bg-gray-900">
+      <div className="grid grid-cols-[auto_1fr] mx-auto min-h-screen mt-[var(--navbarHeight)] dark:bg-gray-900 border border-green-500">
         <Sidebar />
         <ScrollToTopButton />
         {children}

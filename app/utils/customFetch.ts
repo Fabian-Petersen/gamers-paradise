@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const customFetch = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL as string,
+  baseURL: "/api", // Use relative URL to our Next.js API route
   headers: {
     "Content-Type": "application/json",
-    Authorization: process.env.NEXT_PUBLIC_API_KEY,
   },
 });
 

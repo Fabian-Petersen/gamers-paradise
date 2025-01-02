@@ -1,18 +1,22 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useFetchGames } from "../utils/useFetchItems";
+import { useFetchData } from "../../utils/useFetchData";
 import { useParams } from "next/navigation";
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import Image from "next/image";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import Button from "../components/Button";
+import Button from "../../components/Button";
+import { ApiResponse, Game } from "../../lib/types";
+import Error from "./Error";
 
 const Page = () => {
   const { id } = useParams();
-  const { data, isPending, isError } = useFetchGames({ path: "games" });
+  const { data, isPending, isError } = useFetchData<Game>({
+    path: "games",
+  });
   // const game = singleGameData; // Sample Data
-  const game = data?.results.find((game) => String(game.id) === id);
-  console.log("game data:", game);
+  const game = data?.results?.find((game: Game) => String(game.id) === id);
+  // console.log("game data:", game);
 
   const TRANSLATE_AMOUNT = 100;
   const [translate, setTranslate] = useState(0);
@@ -77,9 +81,9 @@ const Page = () => {
                   {game.stores.map((stores) => (
                     <li
                       className="text-clampBodyText capitalize bg-sky-600 text-white rounded-md px-3 py-1"
-                      key={stores.store.id}
+                      key={stores.id}
                     >
-                      {stores.store.name}
+                      {stores.name}
                     </li>
                   ))}
                 </ul>
@@ -183,9 +187,9 @@ const Page = () => {
               {game.platforms.map((platform) => (
                 <li
                   className="bg-availableOn rounded-md py-1 px-3 text-white text-clampBodyText"
-                  key={platform.platform.id}
+                  key={platform.id}
                 >
-                  {platform.platform.name}
+                  {platform.name}
                 </li>
               ))}
             </ul>
@@ -201,11 +205,3 @@ const Page = () => {
 };
 
 export default Page;
-
-const Error = () => {
-  return (
-    <div className="w-full text-clampH3 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-      Error Loading the game...
-    </div>
-  );
-};

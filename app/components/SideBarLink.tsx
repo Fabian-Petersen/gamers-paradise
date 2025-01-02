@@ -8,7 +8,7 @@ type SideBarLinkProps = {
 };
 
 import collectDataKeys from "../utils/collectDataKeys";
-import { useFetchGames } from "../utils/useFetchItems";
+import { useFetchGames } from "../utils/useFetchData";
 import { GameDataType } from "../utils/collectDataKeys";
 // Sidebar Links Component
 

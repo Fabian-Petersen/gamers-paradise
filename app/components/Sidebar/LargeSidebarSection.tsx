@@ -1,17 +1,6 @@
+import React, { ElementType, useState } from "react";
 import Button from "./Button";
-import React, { ElementType } from "react";
-import {
-  Clapperboard,
-  Home,
-  Library,
-  ChevronUp,
-  ChevronDown,
-  History,
-  Film,
-  Gamepad2,
-  Gamepad,
-  LucideIcon,
-} from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 type LargeSidebarSectionProps = {
   children: React.ReactNode;
@@ -26,13 +15,14 @@ function LargeSidebarSection({
   Icon,
   visibleItemCount = Number.POSITIVE_INFINITY,
 }: LargeSidebarSectionProps) {
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const childrenArray = React.Children.toArray(children).flat();
   const visibleChildren = isExpanded
     ? childrenArray
     : childrenArray.slice(0, visibleItemCount);
   const showExpandButton = childrenArray.length > visibleItemCount;
   const ButtonIcon = isExpanded ? ChevronUp : ChevronDown;
+
   return (
     <div className="flex flex-col gap-2">
       {title && (

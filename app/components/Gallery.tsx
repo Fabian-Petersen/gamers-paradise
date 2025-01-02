@@ -1,99 +1,151 @@
 "use client";
 
-import { useState } from "react";
-import { useFetchGames } from "../utils/useFetchItems";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import LoadingSpinner from "./LoadingSpinner";
-import Pagination from "./Pagination";
+import { useFetchData } from "../utils/useFetchData";
+import GamesGallery from "./galleries/GamesGallery";
+import PlatformGallery from "./galleries/PlatformGallery";
+import GenresGallery from "./galleries/GenresGallery";
+import SingleGenreGallery from "./galleries/SingleGenreGallery";
+// import StoresGallery from "./galleries/StoresGallery";
+// import DevGallery from "./galleries/DevGallery";
+
+import {
+  Game,
+  Platforms,
+  Developers,
+  Genres,
+  Stores,
+  PlatformItems,
+} from "../lib/types";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 const Gallery = () => {
-  const router = useRouter();
+  // const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const genre = searchParams.get("genre") || undefined;
-  const platforms = searchParams.get("platforms") || undefined;
-  const store = searchParams.get("store") || undefined;
-  const startDate = searchParams.get("startDate")
-    ? new Date(searchParams.get("startDate")!)
-    : undefined;
-  const endDate = searchParams.get("endDate")
-    ? new Date(searchParams.get("endDate")!)
-    : undefined;
-  const ordering = searchParams.get("ordering") || undefined;
-  console.log("searchParams:", platforms);
-  console.log("genreParams:", genre);
-  console.log("storeParams:", store);
+  const currentPage = parseInt(searchParams.get("page") || "1");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data, isPending, isError } = useFetchGames({
-    genre,
-    platforms,
-    store,
-    startDate,
-    endDate,
-    ordering,
+  //% console.log("Gallery Component - Current pathname:", pathname); // Debug log
+
+  // $ Use Pathname to determine the current view
+  const getViewFromPath = () => {
+    //% console.log("function getViewFromPath():", pathname); // Debug log
+    const path = pathname.toLowerCase();
+    if (path === "/") return "games";
+    if (path === "/platforms") return "platforms";
+    if (path === "/genres") return "genres";
+    return "games"; // default fallback
+  };
+
+  // Determine the current view based on URL parameters
+  // let currentView = "games"; // default view
+  // if (searchParams.has("platforms")) currentView = "platforms";
+  // if (searchParams.has("genres")) currentView = "genres";
+  //% console.log("pathname:", pathname);
+  // if (searchParams.has("developers")) currentView = "developers";
+  // if (searchParams.has("stores")) currentView = "stores";
+
+  // const genres = searchParams.get("genres") || undefined;
+  // const platforms = searchParams.get("platforms") || undefined;
+  // const stores = searchParams.get("stores") || undefined;
+  // const startDate = searchParams.get("startDate")
+  //   ? new Date(searchParams.get("startDate")!)
+  //   : undefined;
+  // const endDate = searchParams.get("endDate")
+  //   ? new Date(searchParams.get("endDate")!)
+  //   : undefined;
+  // const ordering = searchParams.get("ordering") || undefined;
+
+  const gamesQuery = useFetchData<Game>({
+    path: "games",
     page: currentPage,
     page_size: 40,
   });
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    // Update URL with new page number
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", newPage.toString());
-    router.push(`?${params.toString()}`);
-    // Scroll to top when page changes
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  // const platformsParentQuery = useFetchData<PlatformItems>({
+  //   path: "platforms/lists/parents",
+  //   page: currentPage,
+  //   page_size: 5,
+  // });
+
+  const platformsQuery = useFetchData<Platforms>({
+    path: "platforms/lists/parents",
+    page: currentPage,
+    page_size: 20,
+  });
+
+  // const developersQuery = useFetchData<Developers>({
+  //   path: "developers",
+  //   page: currentPage,
+  //   page_size: 10,
+  // });
+
+  const genresQuery = useFetchData<Genres>({
+    path: "genres",
+    page: currentPage,
+    page_size: 40,
+  });
+
+  //% console.log("genresData:", genresQuery);
+
+  // const storesQuery = useFetchData<Stores>({
+  //   path: "stores",
+  //   page: currentPage,
+  //   page_size: 20,
+  // });
+
+  // Add console logs for debugging
+  //% console.log("Current genres:", genres);
+  //% console.log("Current platforms:", platforms);
+  //% console.log("Current stores:", stores);
+  //% console.log("Search params:", Object.fromEntries(searchParams.entries()));
+  const currentView = getViewFromPath();
+  //% console.log("Current view:", currentView);
+  //% console.log("Current pathname:", pathname);
+
+  const renderContent = () => {
+    switch (currentView) {
+      case "platforms":
+        return <PlatformGallery {...platformsQuery} />;
+      case "genres":
+        return <GenresGallery {...genresQuery} />;
+      default:
+        return <GamesGallery {...gamesQuery} />;
+    }
   };
 
-  if (isPending) return <LoadingSpinner />;
-  if (isError) return <div>Error loading data</div>;
-  if (!data?.results)
-    return (
-      <div className="grid place-content-center w-full h-full">
-        No Games found
-      </div>
-    );
-
-  // API returns total count in data.count
-  const totalPages = Math.ceil(data.count / data.results.length);
-
   return (
-    <section className="grid max-w-7xl mx-auto grid-cols-gallery gap-4 pt-[var(--pageTopPadding)] px-4 h-auto dark:bg-gray-900">
-      {data.results.map((game) => (
-        <div
-          key={game.id}
-          className="group rounded-lg overflow-hidden shadow-lg hover:cursor-pointer hover:scale-[102%] dark:hover:border-gray-200 dark:hover:border hover:border-gray-800 hover:border transition-scale duration-100 bg-white dark:bg-gray-600 dark:text-gray-300"
-          onClick={() => router.push(`/${game.id}`)}
-        >
-          <div className="relative h-48">
-            <Image
-              src={game.background_image}
-              alt={game.name}
-              fill
-              sizes="100%"
-              priority
-            />
-          </div>
-          <div className="p-4">
-            <h2 className="text-xl font-bold">{game.name}</h2>
-            <p>Released: {new Date(game.released).toLocaleDateString()}</p>
-            <div className="flex items-center mt-2">
-              <span className="text-yellow-500">★</span>
-              <span className="ml-1">{game.rating.toFixed(1)}</span>
-            </div>
-          </div>
-        </div>
-      ))}
-      <div className="w-full col-span-full">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
+    <section className="grid max-w-7xl mx-auto grid-cols-gallery gap-4 pt-[var(--pageTopPadding)] px-4 h-auto dark:bg-gray-900 border border-blue-500">
+      {renderContent()}
     </section>
   );
 };
+
+// switch (currentView) {
+//   case "platforms":
+//     return <PlatformGallery {...platformsQuery} />;
+//   case "developers":
+//     return <DevGallery {...developersQuery} />;
+//   case "genres":
+//     return <GenresGallery {...genresQuery} />;
+//   case "stores":
+//     return <StoresGallery {...storesQuery} />;
+//   default:
+//     return <GamesGallery {...gamesQuery} />;
+// }
+// };
+
+// switch (currentView) {
+//   case "platforms":
+//     return <PlatformGallery {...platformsQuery} />;
+//   case "developers":
+//     return <DevGallery {...developersQuery} />;
+//   case "genres":
+//     return <GenresGallery {...genresQuery} />;
+//   case "stores":
+//     return <StoresGallery {...storesQuery} />;
+//   default:
+//     return <GamesGallery {...gamesQuery} />;
+// }
+// };
 
 export default Gallery;

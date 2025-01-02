@@ -1,4 +1,4 @@
-import { useFetchGames } from "./useFetchItems";
+import { useFetchGames } from "./useFetchData";
 
 export type GameDataType = {
   id: number;

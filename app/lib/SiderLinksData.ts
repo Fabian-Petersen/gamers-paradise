@@ -1,6 +1,6 @@
 import { Home, Gamepad, ShoppingCart, Clipboard, IconNode } from "lucide-react";
 import { v4 as uuid } from "uuid";
-import { useFetchGames } from "../utils/useFetchItems";
+import { useFetchGames } from "../utils/useFetchData";
 import extractNames from "../utils/collectDataKeys";
 
 export type SiderLink = {
